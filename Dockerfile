@@ -1,7 +1,19 @@
 FROM node:lts-buster
-RUN git clone https://github.com/sadhin-mahmud/bot-2
-WORKDIR /root/gotartech
-RUN npm install && npm install -g pm2 || yarn install --network-concurrency 1
+
+# Working directory
+WORKDIR /app
+
+# Copy package.json first (for caching)
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy rest of project
 COPY . .
-EXPOSE 9090
+
+# Use Render's PORT environment variable
+EXPOSE $PORT
+
+# Start the app
 CMD ["npm", "start"]
